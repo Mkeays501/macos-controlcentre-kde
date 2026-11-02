@@ -169,5 +169,33 @@ If an older copy with the same ID exists, uninstall or upgrade appropriately rat
 - `0.2.0` — substantial design or feature improvements.
 
 ## Credits and license
+## Credits & Attribution
 
+This project is a **derivative work** of [Control Centre for KDE](https://github.com/Prayag2/kde_controlcentre), originally created by **Prayag Jain (Prayag2)**.
+
+The original project provides the foundation for the widget, including its core QML components and KDE Plasma integrations.
+
+This fork builds upon that work with modifications aimed at providing a more macOS-inspired interface, including:
+
+- Redesigned layouts and visual styling.
+- Improved text alignment, spacing, and widget proportions.
+- Compatibility adjustments for KDE Plasma 6.
+- Additional interface refinements and usability improvements.
+
+**Original author:** Prayag Jain (Prayag2)  
+**Original repository:** https://github.com/Prayag2/kde_controlcentre  
+**Modified version maintained by:** Mkeays501  
+**Fork repository:** https://github.com/Mkeays501/macos-controlcentre-kde
+
+### License
 Based on **Control Centre for KDE** by [Prayag Jain (Prayag2)](https://github.com/Prayag2/kde_controlcentre). The upstream project is licensed under the **GNU General Public License v3.0**. Preserve its license and notices when distributing your derivative. This is a community project and is not endorsed by Apple Inc. or KDE.
+This project is distributed under the **GNU General Public License v3.0 (GPL-3.0)**, consistent with the original project.
+
+The original author's copyright and attribution are retained. Modifications made in this fork are provided under the same license.
+
+### Disclaimer
+
+This project is independently maintained and is not an official release of the original Control Centre for KDE project. It is not affiliated with or endorsed by Prayag2, the KDE community, or Apple Inc.
+
+All credit for the original implementation belongs to its respective author. This project is intended as a community-driven customization and extension of that work.
+
