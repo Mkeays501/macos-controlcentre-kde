@@ -32,9 +32,11 @@ Lib.Card {
         anchors.fill: parent
         anchors.bottomMargin: root.smallSpacing
         anchors.topMargin: root.smallSpacing
-        spacing: 0
+        spacing: 4 * root.scale
 
         Lib.LongButton {
+            Layout.preferredHeight: 53 * root.scale
+            Layout.fillHeight: false
             title: i18n("Network")
             subtitle: network.netStatusText
             source: network.activeConnectionIcon
@@ -52,6 +54,8 @@ Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
         }
 
         Lib.LongButton {
+            Layout.preferredHeight: 53 * root.scale
+            Layout.fillHeight: false
             title: i18n("Bluetooth")
             subtitle: Funcs.getBtDevice()
             source: "network-bluetooth"
@@ -61,6 +65,8 @@ Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
         }
 
         Lib.LongButton {
+            Layout.preferredHeight: 53 * root.scale
+            Layout.fillHeight: false
             title: i18n("Settings")
             subtitle: i18n("System Settings")
             source: "settings-configure"

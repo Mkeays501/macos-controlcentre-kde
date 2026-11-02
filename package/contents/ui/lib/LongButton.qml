@@ -1,68 +1,62 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
-import Qt5Compat.GraphicalEffects
-
 import org.kde.kirigami as Kirigami
-import org.kde.ksvg as KSvg
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.components as PlasmaComponents
 
-KSvg.FrameSvgItem {
+Rectangle {
     id: button
-
-    imagePath: "widgets/viewitem"
-    prefix: mouseArea.containsMouse ? (mouseArea.pressed ? "selected+hover" : "hover") : "normal"
-    Layout.fillWidth: true
-    Layout.fillHeight: true
-    Layout.rightMargin: root.smallSpacing
-    Layout.leftMargin: root.smallSpacing
-    signal clicked;
-
-    property alias title: title.text
-    property alias subtitle: subtitle.text
-    property alias source: icon.source
-    property alias sourceColor: icon.color
-
+    signal clicked()
+    property alias title: titleLabel.text
+    property alias subtitle: subtitleLabel.text
+    property alias source: buttonIcon.source
+    property alias sourceColor: buttonIcon.color
     property int margin: root.buttonMargin
 
-    GridLayout {
-        rows: 2; columns: 2
+    Layout.fillWidth: true
+    Layout.preferredHeight: 53 * root.scale
+    color: mouseArea.containsMouse ? "#39526878" : "transparent"
+    radius: 11 * root.scale
+
+    RowLayout {
         anchors.fill: parent
-        anchors.margins: button.margin
-        rowSpacing: -root.mediumSpacing
-        columnSpacing: root.mediumSpacing
-        clip: true
-
+        anchors.leftMargin: 12 * root.scale
+        anchors.rightMargin: 8 * root.scale
+        spacing: 10 * root.scale
         Kirigami.Icon {
-            id: icon
-            Layout.rowSpan: 2
-            Layout.preferredHeight: parent.height - root.smallSpacing //
-            Layout.preferredWidth: Layout.preferredHeight
+            id: buttonIcon
+            Layout.preferredWidth: 22 * root.scale
+            Layout.preferredHeight: 22 * root.scale
+            Layout.alignment: Qt.AlignVCenter
         }
-
-        PlasmaComponents.Label {
-            id: title
+        ColumnLayout {
             Layout.fillWidth: true
-            font.pixelSize: root.largeFontSize
-            font.weight: Font.Bold
-            elide: Text.ElideRight
-        }
-        PlasmaComponents.Label {
-            id: subtitle
-            Layout.fillWidth: true
-            font.pixelSize: root.mediumFontSize
-            elide: Text.ElideRight
+            Layout.alignment: Qt.AlignVCenter
+            spacing: 2 * root.scale
+            Text {
+                id: titleLabel
+                Layout.fillWidth: true
+                font.pixelSize: 14 * root.scale
+                font.bold: true
+                color: "#f8f9fc"
+                elide: Text.ElideRight
+                maximumLineCount: 1
+                verticalAlignment: Text.AlignVCenter
+            }
+            Text {
+                id: subtitleLabel
+                Layout.fillWidth: true
+                font.pixelSize: 11 * root.scale
+                color: "#bac4d5"
+                elide: Text.ElideRight
+                maximumLineCount: 1
+                verticalAlignment: Text.AlignVCenter
+            }
         }
     }
-
     MouseArea {
         id: mouseArea
-
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: {
-            button.clicked()
-        }
+        cursorShape: Qt.PointingHandCursor
+        onClicked: button.clicked()
     }
 }

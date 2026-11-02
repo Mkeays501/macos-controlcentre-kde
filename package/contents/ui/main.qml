@@ -15,11 +15,11 @@ PlasmoidItem {
     property bool playVolumeFeedback: plasmoid.configuration.playVolumeFeedback
 
     property var scale: plasmoid.configuration.scale * 0.01
-    property int fullRepWidth: 360 * scale
-    property int fullRepHeight: 360 * scale
-    property int sectionHeight: 180 * scale
+    property int fullRepWidth: 416 * scale
+    property int fullRepHeight: 600 * scale
+    property int sectionHeight: 192 * scale
 
-    property int largeSpacing: 12 * scale
+    property int largeSpacing: 14 * scale
     property int mediumSpacing: 8 * scale
     property int smallSpacing: 6 * scale
 

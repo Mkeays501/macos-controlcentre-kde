@@ -1,96 +1,131 @@
-import QtQml
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.extras as PlasmaExtras
 import org.kde.plasma.components as PlasmaComponents
-
-import "lib" as Lib
 import "components" as Components
-import "js/funcs.js" as Funcs
-
 
 Item {
     id: fullRep
-
-    // PROPERTIES
     Layout.preferredWidth: root.fullRepWidth
-    Layout.preferredHeight: wrapper.implicitHeight
-    Layout.minimumWidth: Layout.preferredWidth
-    Layout.maximumWidth: Layout.preferredWidth
-    Layout.minimumHeight: Layout.preferredHeight
-    Layout.maximumHeight: Layout.preferredHeight
+    Layout.preferredHeight: root.fullRepHeight
+    Layout.minimumWidth: root.fullRepWidth
+    Layout.maximumWidth: root.fullRepWidth
+    Layout.minimumHeight: root.fullRepHeight
+    Layout.maximumHeight: root.fullRepHeight
     clip: true
 
-    // Lists all available network connections
-    Components.SectionNetworks{
-        id: sectionNetworks
+    // Nearly-black translucent macOS-inspired surface.
+    Rectangle {
+        anchors.fill: parent
+        radius: 24 * root.scale
+        color: "#e5222530"
+        border.color: "#45ffffff"
+        border.width: 1
     }
 
-    // Main wrapper
+    // Network connections overlay from the original widget.
+    Components.SectionNetworks {
+        id: sectionNetworks
+        anchors.fill: parent
+        z: 20
+    }
+
     ColumnLayout {
         id: wrapper
-
         anchors.fill: parent
-        spacing: 0
+        anchors.margins: 16 * root.scale
+        spacing: 12 * root.scale
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 26 * root.scale
+            PlasmaComponents.Label {
+                text: "Control Center"
+                color: "#f6f7fb"
+                font.pixelSize: 18 * root.scale
+                font.bold: true
+                Layout.fillWidth: true
+            }
+            PlasmaComponents.Label {
+                text: "●  ●  ●"
+                color: "#a3a9ba"
+                font.pixelSize: 11 * root.scale
+            }
+        }
 
         RowLayout {
             id: sectionA
-
-            spacing: 0
             Layout.fillWidth: true
             Layout.preferredHeight: root.sectionHeight
-            Layout.maximumHeight: root.sectionHeight
+            spacing: 10 * root.scale
 
-            // Network, Bluetooth and Settings Button
-            Components.SectionButtons{}
+            // Three existing functional toggles, restyled by lib/Card.qml.
+            Components.SectionButtons {
+                Layout.preferredWidth: (wrapper.width - 10 * root.scale) * 0.60
+                Layout.fillWidth: false
+                Layout.fillHeight: true
+            }
 
-            // Quick Toggle Buttons
             ColumnLayout {
-                spacing: 0
-
-                Components.DndButton{}
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                spacing: 8 * root.scale
+                Components.DndButton {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.columnSpan: 1
+                }
                 RowLayout {
-                    spacing: 0
-
-                    // Two blocks for custom commands
-                    Components.CommandRun{
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    spacing: 8 * root.scale
+                    Components.KDEConnect {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                    }
+                    Components.ColorSchemeSwitcher {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                    }
+                }
+                RowLayout {
+                    visible: root.showCmd1 || root.showCmd2
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    spacing: 8 * root.scale
+                    Components.CommandRun {
                         visible: root.showCmd1
                         title: root.cmdTitle1
                         icon: root.cmdIcon1
                         command: root.cmdRun1
+                        Layout.fillWidth: true
                     }
-                    Components.CommandRun{
+                    Components.CommandRun {
                         visible: root.showCmd2
                         title: root.cmdTitle2
                         icon: root.cmdIcon2
                         command: root.cmdRun2
+                        Layout.fillWidth: true
                     }
-
-                    // Other blocks
-                    Components.KDEConnect{}
-                    Components.RedShift{}
-                    Components.ColorSchemeSwitcher{}
                 }
             }
         }
-        Item {
-            Layout.fillHeight: true
-        }
-        ColumnLayout {
-            id: sectionB
 
-            spacing: 0
+        // macOS-style stacked large controls. Their native sliders remain functional.
+        Components.BrightnessSlider {
             Layout.fillWidth: true
-
-            Components.Volume{}
-            Components.BrightnessSlider{}
-            Components.MediaPlayer{}
+            Layout.preferredHeight: 82 * root.scale
         }
-
-
+        Components.Volume {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 82 * root.scale
+        }
+        Components.MediaPlayer {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 100 * root.scale
+        }
+        Item { Layout.fillHeight: true }
     }
 }
