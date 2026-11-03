@@ -1,5 +1,6 @@
 import QtQml
 import QtQuick
+import "../lib/Icons.js" as Icons
 import QtQuick.Layouts
 import QtQuick.Controls
 
@@ -17,9 +18,9 @@ Lib.CardButton {
     Layout.fillHeight: true
     Layout.fillWidth: true
     title: i18n(isDarkTheme() ? "Light Theme" : "Dark Theme")
-    Kirigami.Icon {
+    Lib.Glyph {
         anchors.fill: parent
-        source: isDarkTheme() ? "brightness-high" : "brightness-low"
+        source: "brightness-high"
     }
 
     onClicked: executable.swapColorScheme()
@@ -28,7 +29,7 @@ Lib.CardButton {
         id: executable
         engine: "executable"
         connectedSources: []
-        onNewData: {
+        onNewData: (sourceName, data) => {
             disconnectSource(sourceName)
         }
 
@@ -41,6 +42,7 @@ Lib.CardButton {
             var colorSchemeName = usingDark ? Plasmoid.configuration.lightTheme : Plasmoid.configuration.darkTheme;
             Plasmoid.configuration.isDarkTheme = !usingDark ? 1 : 0;
 
+            if (!/^[A-Za-z0-9_.-]+$/.test(colorSchemeName)) return;
             exec("plasma-apply-colorscheme " + colorSchemeName)
         }
     }

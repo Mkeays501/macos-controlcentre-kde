@@ -1,50 +1,39 @@
-import QtQml
+// SPDX-License-Identifier: GPL-3.0-only
+// Based on the Control Centre brightness integration by Prayag Jain.
 import QtQuick
-import QtQuick.Layouts
-import org.kde.plasma.plasma5support as PlasmaCore
-import org.kde.plasma.components as PlasmaComponents
-import "../lib" as Lib
-
+import QtQml.Models
 import org.kde.plasma.private.brightnesscontrolplugin
-
-
+import "../lib" as Lib
 Lib.Slider {
-    id: brightnessControl
-
-    readonly property int brightnessMax: sbControl.brightnessMax
-    readonly property int brightnessMin: (brightnessMax > 100 ? 1 : 0)
-
-    property int screenBrightness: sbControl.brightness
-    property bool disableBrightnessUpdate: true
-
-    // Should be visible ONLY if the monitor supports it
-    visible: isBrightnessAvailable && root.showBrightness
-
-    // Dimensions
-    Layout.fillWidth: true
-    Layout.preferredHeight: root.sectionHeight/2
-
-    // Slider properties
-    title: "Display Brightness"
+    id: control
+    // Plasma has shipped both single-display and per-display private APIs.
+    readonly property bool perDisplay: typeof backend.displays !== "undefined"
+    readonly property var firstDisplay: displays.count > 0 ? displays.objectAt(0) : null
+    readonly property real maximum: perDisplay ? (firstDisplay?.maximum ?? 0) : (backend.brightnessMax ?? 0)
+    enabled: backend.isBrightnessAvailable && maximum > 0
+    title: i18n("Display")
     source: "brightness-high"
-    secondaryTitle: Math.round((screenBrightness / brightnessMax)*100) + "%"
-
-    from: brightnessMin
-    to: brightnessMax
-    value: sbControl.brightness
-
-    readonly property bool isBrightnessAvailable: sbControl.isBrightnessAvailable
-
+    from: 0
+    to: Math.max(1, maximum)
+    value: perDisplay ? (firstDisplay?.current ?? 0) : (backend.brightness ?? 0)
+    secondaryTitle: enabled ? Math.round(value / maximum * 100) + "%" : i18n("Unavailable")
     onMoved: {
-        screenBrightness = value
-
-        sbControl.brightness = Math.max(brightnessMin, Math.min(brightnessMax, value));
+        if (!enabled) return
+        const bounded = Math.round(Math.max(from, Math.min(maximum, value)))
+        if (perDisplay) backend.setBrightness(firstDisplay.name, bounded)
+        else backend.brightness = bounded
     }
-
-    /// Components ///
-
-    ScreenBrightnessControl {
-        id: sbControl
-        isSilent: true
+    ScreenBrightnessControl { id: backend; isSilent: true }
+    Instantiator {
+        id: displays
+        model: control.perDisplay ? backend.displays : null
+        delegate: QtObject {
+            required property string displayName
+            required property int brightness
+            required property int maxBrightness
+            readonly property string name: displayName
+            readonly property int current: brightness
+            readonly property int maximum: maxBrightness
+        }
     }
 }

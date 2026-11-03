@@ -10,7 +10,7 @@
             <default>100</default>
         </entry>
         <entry name="transparency" type="Bool">
-            <default>False</default>
+            <default>True</default>
         </entry>
         <entry name="isDarkTheme" type="int">
             <default>-1</default>
@@ -68,9 +68,9 @@
             <default>false</default>
         </entry>
 
-        <!--      HEHEHE GET RICKROLLED LOL        -->
+        <!-- Custom commands run only when explicitly clicked. -->
         <entry name="cmdRun1" type="string">
-            <default>xdg-open "https://shattereddisk.github.io/rickroll/rickroll.mp4"</default>
+            <default></default>
         </entry>
         <entry name="cmdTitle1" type="string">
             <default>Command Button</default>
@@ -79,7 +79,7 @@
             <default>system-run-symbolic</default>
         </entry>
         <entry name="cmdRun2" type="string">
-            <default>xdg-open "https://bit.ly/3yCFTip"</default>
+            <default></default>
         </entry>
         <entry name="cmdTitle2" type="string">
             <default>Command Button</default>

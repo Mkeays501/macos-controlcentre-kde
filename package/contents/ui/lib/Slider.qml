@@ -1,95 +1,71 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Liquid Glass layout modifications, 2026. Based on Prayag Jain and Mkeays501.
 import QtQuick
+import "Icons.js" as Icons
+import QtQuick.Controls as QQC
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.components as PlasmaComponents2
-import org.kde.plasma.components as PlasmaComponents
-
 Card {
-    id: sliderComp
-    signal moved
-    signal clicked
-
+    id: control
+    signal moved()
+    signal clicked()
     property alias title: title.text
-    property alias secondaryTitle: secondaryTitle.text
+    property alias secondaryTitle: percentage.text
     property alias value: slider.value
     property bool useIconButton: false
-    property string source
-
-
-    property int from: 0
-    property int to: 100
-
-
+    property string source: ""
+    property real from: 0
+    property real to: 100
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: root.largeSpacing
-        clip: true
-
+        anchors.margins: 17 * root.scale
+        spacing: 5 * root.scale
         RowLayout {
-            Layout.fillHeight: true
             Layout.fillWidth: true
-            spacing: root.smallSpacing
-
-            PlasmaComponents.Label {
-                id: title
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignLeft
-                font.pixelSize: root.largeFontSize
-                font.weight: Font.Bold
-                font.capitalization: Font.Capitalize
-            }
-
-            PlasmaComponents.Label {
-                id: secondaryTitle
-                visible: root.showPercentage
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignRight
-                font.pixelSize: root.largeFontSize
-                font.weight: Font.Bold
-                font.capitalization: Font.Capitalize
-                horizontalAlignment: Text.AlignRight
-            }
-
-
+            Text { id: title; color: "#effaff"; font.pixelSize: 15 * root.scale; font.weight: Font.DemiBold; Layout.fillWidth: true }
+            Text { id: percentage; color: "#d3ebf6"; font.pixelSize: 12 * root.scale; visible: root.showPercentage }
         }
         RowLayout {
-            Layout.fillHeight: true
             Layout.fillWidth: true
-            spacing: root.smallSpacing
-
-            Kirigami.Icon {
-                id: icon
-                source: sliderComp.source
-                visible: !sliderComp.useIconButton
-                Layout.preferredHeight: root.largeFontSize*2
-                Layout.preferredWidth: Layout.preferredHeight
+            spacing: 10 * root.scale
+            QQC.AbstractButton {
+                Layout.preferredWidth: 25 * root.scale
+                Layout.preferredHeight: 30 * root.scale
+                enabled: control.useIconButton
+                Accessible.name: i18n("Mute or unmute sound")
+                contentItem: Glyph { source: control.source }
+                onClicked: control.clicked()
             }
-
-            PlasmaComponents.ToolButton {
-                id: iconButton
-                visible: sliderComp.useIconButton
-                icon.name: sliderComp.source
-                Layout.preferredHeight: root.largeFontSize*2
-                Layout.preferredWidth: Layout.preferredHeight
-                onClicked: sliderComp.clicked()
-            }
-
-            PlasmaComponents.Slider {
+            QQC.Slider {
                 id: slider
-                Layout.fillHeight: true
                 Layout.fillWidth: true
-                from: sliderComp.from
-                to: sliderComp.to
-                stepSize: 2
-                snapMode: Slider.SnapAlways
-
-                onMoved: {
-                    sliderComp.moved()
+                Layout.preferredHeight: 30 * root.scale
+                from: control.from
+                to: Math.max(control.from + 1, control.to)
+                stepSize: 1
+                Accessible.name: control.title
+                onMoved: control.moved()
+                background: Rectangle {
+                    x: slider.leftPadding
+                    y: slider.topPadding + (slider.availableHeight - height)/2
+                    width: slider.availableWidth
+                    height: 5 * root.scale
+                    radius: height / 2
+                    color: "#45406784"
+                    Rectangle { width: slider.visualPosition * parent.width; height: parent.height; radius: parent.radius; color: "#f9feff" }
+                }
+                handle: Rectangle {
+                    x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
+                    y: slider.topPadding + (slider.availableHeight - height)/2
+                    width: 22 * root.scale
+                    height: 18 * root.scale
+                    radius: height/2
+                    color: "white"
+                    border.width: slider.visualFocus ? 2 : 0
+                    border.color: "#2489ff"
                 }
             }
+            Glyph { source: control.source; Layout.preferredWidth: 21 * root.scale; Layout.preferredHeight: width }
         }
     }
 }

@@ -1,49 +1,33 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Liquid Glass layout modifications, 2026. Based on Prayag Jain and Mkeays501.
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
-
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.components as PlasmaComponents
-
 Card {
-    id: cardButton
-    signal clicked
+    id: button
+    signal clicked()
+    property string title: ""
     default property alias content: icon.data
-    property alias title: title.text
-
-    GridLayout {
-        anchors.fill: parent
-        property bool small: width < root.fullRepWidth/4
-        anchors.margins: small ? root.smallSpacing : root.largeSpacing
-        rows: small ? 2 : 1
-        columns: small ? 1 : 2
-        columnSpacing: small ? 0 : 10*root.scale
-        rowSpacing: small ? 0 : 10*root.scale
-
-        Item {
-            id: icon
-            Layout.preferredHeight: parent.small ? parent.height/1.6-root.smallSpacing: parent.height - root.largeSpacing
-            Layout.preferredWidth: Layout.preferredHeight
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-        }
-        PlasmaComponents.Label {
-            id: title
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.margins: root.smallSpacing
-            font.pixelSize: parent.small ? root.mediumFontSize : root.largeFontSize
-            font.weight: parent.small ? Font.Normal : Font.Bold
-            horizontalAlignment: parent.small ? Qt.AlignHCenter : Qt.AlignLeft
-            verticalAlignment: Qt.AlignVCenter
-            wrapMode: Text.WordWrap
-        }
+    radius: Math.min(width, height) / 2
+    Item {
+        id: icon
+        anchors.centerIn: parent
+        width: 30 * root.scale
+        height: width
     }
-    MouseArea {
-        id: mouseArea
+    AbstractButton {
         anchors.fill: parent
+        text: button.title
+        Accessible.name: text
         hoverEnabled: true
-
-        onClicked: {
-            cardButton.clicked()
+        background: Rectangle {
+            color: "white"
+            radius: button.radius
+            opacity: parent.down ? 0.20 : parent.hovered ? 0.10 : 0
+            border.color: parent.visualFocus ? "white" : "transparent"
         }
+        ToolTip.visible: hovered
+        ToolTip.text: text
+        onClicked: button.clicked()
     }
 }

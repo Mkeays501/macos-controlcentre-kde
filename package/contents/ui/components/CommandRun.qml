@@ -1,5 +1,6 @@
 import QtQml
 import QtQuick
+import "../lib/Icons.js" as Icons
 import QtQuick.Layouts
 
 import org.kde.kirigami as Kirigami
@@ -18,7 +19,7 @@ Lib.CardButton {
         executable.connectSource(cmd)
     }
 
-    Kirigami.Icon {
+    Lib.Glyph {
         anchors.fill: parent
         source: icon
     }
@@ -28,12 +29,12 @@ Lib.CardButton {
         engine: "executable"
         connectedSources: []
 
-        onNewData: {
-            disconnectSource(connectedSources)
+        onNewData: (sourceName, data) => {
+            disconnectSource(sourceName)
         }
     }
 
     onClicked: {
-        exec(command)
+        if (command.trim().length) exec(command)
     }
 }

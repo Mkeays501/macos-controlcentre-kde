@@ -1,86 +1,30 @@
-import QtQml
+// SPDX-License-Identifier: GPL-3.0-only
+// Liquid Glass layout modifications, 2026. Based on Prayag Jain and Mkeays501.
 import QtQuick
-import QtQuick.Layouts
-
-import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.private.volume
-
 import "../lib" as Lib
-import "../js/funcs.js" as Funcs
-
 Lib.Slider {
-    Layout.fillWidth: true
-    Layout.preferredHeight: root.sectionHeight/2
-    visible: sinkAvailable && root.showVolume
+    id: audio
+    title: i18n("Sound")
     useIconButton: true
-    title: i18n("Volume")
-
-    // Audio source
-    property var sink: PreferredDevice.sink
-
-    readonly property bool sinkAvailable: sink && !(sink && sink.name == "auto_null")
-
-    value: Math.round(sink.volume / PulseAudio.NormalVolume * 100)
-    secondaryTitle: Math.round(sink.volume / PulseAudio.NormalVolume * 100) + "%"
-
-    // Changes icon based on the current volume percentage
-    source: getIconForVolume()
-
-    onValueChanged: {
-        if(!root.playVolumeFeedback || debounce.limit()) {
-            return;
-        }
-
-        feedback.play(sink.index)
-    }
-    // Update volume
+    readonly property var sink: PreferredDevice.sink
+    readonly property bool sinkAvailable: !!sink && sink.name !== "auto_null"
+    enabled: sinkAvailable
+    from: 0
+    to: 100
+    value: sinkAvailable ? Math.round(sink.volume / PulseAudio.NormalVolume * 100) : 0
+    secondaryTitle: sinkAvailable ? Math.round(value) + "%" : i18n("Unavailable")
+    source: sinkAvailable ? AudioIcon.forVolume(value, sink.muted, "") : "audio-volume-muted"
     onMoved: {
-        sink.volume = value * PulseAudio.NormalVolume / 100
-    }
-
-    property var oldVol: 100 * PulseAudio.NormalVolume / 100
-    onClicked: {
-        if(value!=0){
-            oldVol = sink.volume
-            sink.volume=0
-        } else {
-            sink.volume=oldVol
+        if (!sinkAvailable) return
+        sink.muted = false
+        sink.volume = Math.round(value * PulseAudio.NormalVolume / 100)
+        if (root.playVolumeFeedback && !debounce.running) {
+            feedback.play(sink.index)
+            debounce.start()
         }
     }
-
-    // Components //
-
-    // Volume Feedback
-    VolumeFeedback {
-        id: feedback
-    }
-
-    Timer {
-        id: debounce
-        interval: 150 // ms
-
-        function limit()
-        {
-            if (debounce.running) {
-                return true;
-            }
-
-            debounce.start();
-            return false;
-        }
-    }
-
-    /// Functions ///
-
-    function getIconForVolume()
-    {
-        return AudioIcon.forVolume(
-            volumePercent(sink.volume),
-            sink.muted, ""
-        );
-    }
-
-    function volumePercent(volume) {
-        return volume / PulseAudio.NormalVolume * 100;
-    }
+    onClicked: { if (sinkAvailable) sink.muted = !sink.muted }
+    VolumeFeedback { id: feedback }
+    Timer { id: debounce; interval: 150 }
 }

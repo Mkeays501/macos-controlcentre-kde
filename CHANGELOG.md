@@ -1,3 +1,11 @@
+# 1.1.1 — 2026-11-03
+
+Render bundled icons directly through Qt Quick Image, avoiding icon-theme name resolution for Display settings, Sound and other bundled glyphs. Physical desktop validation pending; QML compilation and offscreen rendering pass. Scrolling and opaque popup framing remain under investigation.
+
+# 1.1.0 — 2026-11-03
+
+Glass-inspired layout redesign, original vector icons, KDE backend fixes and backup/rollback scripts. GPLv3 attribution retained. QML compile, offscreen rendering and isolated package installation/rollback checks passed. Real-desktop feedback identified unresolved scrolling, fallback icons and opaque framing; see TESTING.md and README.md.
+
 # Changelog
 All notable changes to this project will be documented in this file.
 

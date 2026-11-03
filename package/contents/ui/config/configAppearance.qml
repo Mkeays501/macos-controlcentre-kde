@@ -29,7 +29,7 @@ KCM.SimpleKCM {
     property alias cfg_cmdTitle2: cmdTitle2.text
 
     property int numChecked: showKDEConnect.checked + showColorSwitcher.checked + showNightColor.checked + showCmd1.checked + showCmd2.checked
-    property int maxNum: 2
+    property int maxNum: 5
 
     Kirigami.FormLayout {
         Button {
@@ -46,7 +46,7 @@ KCM.SimpleKCM {
         SpinBox {
             id: scale
             Kirigami.FormData.label: i18n("Scale:")
-            from: 0; to: 1000
+            from: 50; to: 200
         }
 
         Item {
@@ -134,7 +134,7 @@ KCM.SimpleKCM {
             }
         }
         Label {
-            text: i18n("You can enable only 2 toggle buttons at a time.")
+            text: i18n("Additional controls appear in a separate row.")
             font: Kirigami.Theme.smallFont
             color: Kirigami.Theme.neutralTextColor
             Layout.fillWidth: true

@@ -1,122 +1,60 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Liquid Glass layout modifications, 2026. Based on Prayag Jain and Mkeays501.
 import QtQuick
 import QtQuick.Layouts
-import org.kde.plasma.plasma5support as PlasmaCore
-import org.kde.plasma.components as PlasmaComponents
-import org.kde.kirigami as Kirigami
 import org.kde.plasma.private.mpris as Mpris
-
 import "../lib" as Lib
-
 Lib.Card {
-    id: mediaPlayer
-    visible: root.showMediaPlayer
-    Layout.fillWidth: true
-    Layout.preferredHeight: root.sectionHeight/2
-
-    readonly property bool isPlaying: (model.currentPlayer?.playbackStatus ?? 0) == Mpris.PlaybackStatus.Playing
-
-    readonly property string trackName: model.currentPlayer?.track ?? i18n("Unknown Media")
-    readonly property string trackArtist: model.currentPlayer?.artist ?? i18n("Unknown Artist")
-    readonly property string trackArt: model.currentPlayer?.artUrl ?? ""
-
-    RowLayout {
+    id: media
+    radius: 32 * root.scale
+    readonly property var player: model.currentPlayer
+    readonly property bool isPlaying: (player?.playbackStatus ?? 0) === Mpris.PlaybackStatus.Playing
+    Mpris.Mpris2Model { id: model }
+    ColumnLayout {
         anchors.fill: parent
-        anchors.margins: root.largeSpacing
-        Layout.fillWidth: true
-        Layout.preferredHeight: root.sectionHeight/2
-
+        anchors.margins: 17 * root.scale
+        spacing: 5 * root.scale
         Image {
-            id: audioThumb
+            source: media.player?.artUrl || "../../assets/music.png"
             fillMode: Image.PreserveAspectCrop
-            source: {
-                if (mediaPlayer.trackArt.trim().length < 1) {
-                    return "../../assets/music.png";
-                }
-
-                return mediaPlayer.trackArt;
-            }
-
-            Layout.fillHeight: true
-            Layout.preferredWidth: height
+            Layout.preferredWidth: 50 * root.scale
+            Layout.preferredHeight: 50 * root.scale
         }
-
-        ColumnLayout {
-            id: mediaNameWrapper
-            Layout.margins: root.smallSpacing
-            Layout.fillHeight: true
-            spacing: 0
-
-            PlasmaComponents.Label {
-                id: audioTitle
-                text: mediaPlayer.trackName
-
-                Layout.fillWidth: true
-                font.capitalization: Font.Capitalize
-                font.weight: Font.Bold
-                font.pixelSize: root.largeFontSize
-                elide: Text.ElideRight
-            }
-
-            PlasmaComponents.Label {
-                id: audioArtist
-                text: mediaPlayer.trackArtist
-
-                Layout.fillWidth: true
-                font.pixelSize: root.mediumFontSize
-            }
+        Item { Layout.fillHeight: true }
+        Text {
+            Layout.fillWidth: true
+            text: media.player?.track || i18n("No media playing")
+            color: "#f4fcff"; font.pixelSize: 15 * root.scale; font.weight: Font.DemiBold
+            elide: Text.ElideRight
         }
-
+        Text {
+            Layout.fillWidth: true
+            text: media.player?.artist || i18n("Start a media player")
+            color: "#cee8f2"; font.pixelSize: 12 * root.scale
+            elide: Text.ElideRight
+        }
         RowLayout {
-            id: audioControls
-
-            Layout.alignment: Qt.AlignRight
-
-            Kirigami.Icon {
-                Layout.preferredHeight: mediaNameWrapper.implicitHeight
-                Layout.preferredWidth: height
-                source: "media-skip-backward"
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        model.currentPlayer?.Previous();
-                    }
-                }
+            Layout.fillWidth: true
+            spacing: 0
+            Lib.GlassButton {
+                Layout.fillWidth: true; Layout.preferredHeight: 36 * root.scale
+                circular: true; source: "media-skip-backward"; text: i18n("Previous track")
+                enabled: media.player?.canGoPrevious ?? false
+                onClicked: media.player.Previous()
             }
-
-            Kirigami.Icon {
-                id: playIcon
-                source: mediaPlayer.isPlaying ? "media-playback-pause" : "media-playback-start"
-
-                Layout.preferredHeight: mediaNameWrapper.implicitHeight
-                Layout.preferredWidth: height
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        model.currentPlayer?.PlayPause();
-                    }
-                }
+            Lib.GlassButton {
+                Layout.fillWidth: true; Layout.preferredHeight: 36 * root.scale
+                circular: true; source: media.isPlaying ? "media-playback-pause" : "media-playback-start"
+                text: media.isPlaying ? i18n("Pause") : i18n("Play")
+                enabled: media.player?.canControl ?? false
+                onClicked: media.player.PlayPause()
             }
-
-            Kirigami.Icon {
-                Layout.preferredHeight: mediaNameWrapper.implicitHeight
-                Layout.preferredWidth: height
-                source: "media-skip-forward"
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        model.currentPlayer?.Next();
-                    }
-                }
+            Lib.GlassButton {
+                Layout.fillWidth: true; Layout.preferredHeight: 36 * root.scale
+                circular: true; source: "media-skip-forward"; text: i18n("Next track")
+                enabled: media.player?.canGoNext ?? false
+                onClicked: media.player.Next()
             }
         }
-    }
-
-    // Components //
-
-    Mpris.Mpris2Model {
-        id: model
     }
 }

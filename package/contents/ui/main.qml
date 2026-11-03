@@ -10,13 +10,13 @@ PlasmoidItem {
     clip: true
 
     // PROPERTIES
-    property bool enableTransparency: plasmoid.configuration.transparency
+    property bool enableTransparency: Plasmoid.configuration.transparency
     property var animationDuration: Kirigami.Units.veryShortDuration
-    property bool playVolumeFeedback: plasmoid.configuration.playVolumeFeedback
+    property bool playVolumeFeedback: Plasmoid.configuration.playVolumeFeedback
 
-    property var scale: plasmoid.configuration.scale * 0.01
+    property var scale: Math.max(0.5, Math.min(2, Plasmoid.configuration.scale * 0.01))
     property int fullRepWidth: 416 * scale
-    property int fullRepHeight: 600 * scale
+    property int fullRepHeight: 640 * scale
     property int sectionHeight: 192 * scale
 
     property int largeSpacing: 14 * scale
@@ -31,27 +31,27 @@ PlasmoidItem {
     property int smallFontSize: 7 * scale
 
     // Main Icon
-    property string mainIconName: plasmoid.configuration.mainIconName
-    property string mainIconHeight: plasmoid.configuration.mainIconHeight
+    property string mainIconName: Plasmoid.configuration.mainIconName
+    property string mainIconHeight: Plasmoid.configuration.mainIconHeight
 
     // Components
-    property bool showKDEConnect: plasmoid.configuration.showKDEConnect
-    property bool showNightColor: plasmoid.configuration.showNightColor
-    property bool showColorSwitcher: plasmoid.configuration.showColorSwitcher
-    property bool showDnd: plasmoid.configuration.showDnd
-    property bool showVolume: plasmoid.configuration.showVolume
-    property bool showBrightness: plasmoid.configuration.showBrightness
-    property bool showMediaPlayer: plasmoid.configuration.showMediaPlayer
-    property bool showCmd1: plasmoid.configuration.showCmd1
-    property bool showCmd2: plasmoid.configuration.showCmd2
-    property bool showPercentage: plasmoid.configuration.showPercentage
+    property bool showKDEConnect: Plasmoid.configuration.showKDEConnect
+    property bool showNightColor: Plasmoid.configuration.showNightColor
+    property bool showColorSwitcher: Plasmoid.configuration.showColorSwitcher
+    property bool showDnd: Plasmoid.configuration.showDnd
+    property bool showVolume: Plasmoid.configuration.showVolume
+    property bool showBrightness: Plasmoid.configuration.showBrightness
+    property bool showMediaPlayer: Plasmoid.configuration.showMediaPlayer
+    property bool showCmd1: Plasmoid.configuration.showCmd1
+    property bool showCmd2: Plasmoid.configuration.showCmd2
+    property bool showPercentage: Plasmoid.configuration.showPercentage
 
-    property string cmdRun1: plasmoid.configuration.cmdRun1
-    property string cmdTitle1: plasmoid.configuration.cmdTitle1
-    property string cmdIcon1: plasmoid.configuration.cmdIcon1
-    property string cmdRun2: plasmoid.configuration.cmdRun2
-    property string cmdTitle2: plasmoid.configuration.cmdTitle2
-    property string cmdIcon2: plasmoid.configuration.cmdIcon2
+    property string cmdRun1: Plasmoid.configuration.cmdRun1
+    property string cmdTitle1: Plasmoid.configuration.cmdTitle1
+    property string cmdIcon1: Plasmoid.configuration.cmdIcon1
+    property string cmdRun2: Plasmoid.configuration.cmdRun2
+    property string cmdTitle2: Plasmoid.configuration.cmdTitle2
+    property string cmdIcon2: Plasmoid.configuration.cmdIcon2
 
     readonly property bool inPanel: (Plasmoid.location === PlasmaCore.Types.TopEdge
         || Plasmoid.location === PlasmaCore.Types.RightEdge
@@ -60,7 +60,7 @@ PlasmoidItem {
 
     switchHeight: fullRepWidth
     switchWidth: fullRepWidth
-    preferredRepresentation: inPanel ? plasmoid.compactRepresentation : plasmoid.fullRepresentation
+    preferredRepresentation: inPanel ? root.compactRepresentation : root.fullRepresentation
     fullRepresentation: FullRepresentation {}
     compactRepresentation: CompactRepresentation {}
 }

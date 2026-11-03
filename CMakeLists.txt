@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-
-project(controlcentre)
-
-find_package(ECM REQUIRED NO_MODULE)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_MODULE_PATH})
-find_package(KF5Plasma)
-
-plasma_install_package(package controlcentre)
+project(macos_controlcentre)
+find_package(ECM 6.0 REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+find_package(Plasma 6.0 REQUIRED)
+plasma_install_package(package com.github.mkeays501.macoscontrolcentre)

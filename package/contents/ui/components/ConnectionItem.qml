@@ -1,4 +1,5 @@
 import QtQuick
+import org.kde.kcmutils
 import "../lib" as Lib
 import org.kde.plasma.networkmanagement as PlasmaNM
 
@@ -33,6 +34,9 @@ Lib.LongButton {
     onClicked: {
         if (ConnectionState === PlasmaNM.Enums.Activated) {
             network.handler.deactivateConnection(ConnectionPath, DevicePath)
+        } else if (!Uuid) {
+            // Let KDE's connection editor handle new credentials and enterprise Wi-Fi.
+            KCMLauncher.openSystemSettings("kcm_networkmanagement")
         } else {
             network.handler.activateConnection(ConnectionPath, DevicePath,
                                                SpecificPath)

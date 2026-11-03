@@ -15,8 +15,8 @@
         "Icon": "configure-toolbars",
         "Id": "com.github.mkeays501.macoscontrolcentre",
         "License": "GPLv3",
-        "Name": "macOS Style Control Centre",
-        "Version": "1.0.0",
+        "Name": "Liquid Glass Control Centre",
+        "Version": "1.1.1",
         "Website": "https://github.com/Mkeays501/macos-controlcentre-kde"
     },
     "X-Plasma-Provides": "org.kde.plasma.multimediacontrols,org.kde.plasma.powermanagement,org.kde.plasma.notifications",

@@ -1,36 +1,27 @@
-import QtQml
+// SPDX-License-Identifier: GPL-3.0-only
+// Liquid Glass layout modifications, 2026. Based on Prayag Jain and Mkeays501.
 import QtQuick
-import QtQuick.Layouts
+import org.kde.notificationmanager as Notifications
 import "../lib" as Lib
-import "../js/funcs.js" as Funcs
-import org.kde.notificationmanager as NotificationManager
-
-Lib.CardButton {
-    visible: root.showDnd
-    Layout.columnSpan: 2
-    Layout.fillWidth: true
-    Layout.fillHeight: true
-    title: i18n("Do Not Disturb")
-
-    // NOTIFICATION MANAGER
-    property var notificationSettings: notificationSettings
-
-    // Enables "Do Not Disturb" on click
+Lib.GlassButton {
+    id: focus
+    text: i18n("Focus")
+    subtitle: inhibited ? i18n("Do Not Disturb on") : i18n("Do Not Disturb off")
+    source: "notifications-disabled"
+    readonly property bool inhibited: settings.notificationsInhibitedUntil.getTime() > Date.now()
+        || settings.notificationsInhibitedByApplication
+        || (settings.inhibitNotificationsWhenScreensMirrored && settings.screensMirrored)
+    // Keep the glass pill; the subtitle describes the actual backend state.
+    Notifications.Settings { id: settings }
     onClicked: {
-        Funcs.toggleDoNotDisturb();
-    }
-
-    Lib.Icon {
-        id: icon
-        source: {
-            return (Funcs.checkInhibition() ? "notifications-disabled" : "notifications");
+        if (inhibited) {
+            settings.notificationsInhibitedUntil = undefined
+            settings.revokeApplicationInhibitions()
+        } else {
+            let until = new Date()
+            until.setFullYear(until.getFullYear() + 1)
+            settings.notificationsInhibitedUntil = until
         }
-        anchors.fill: parent
-    }
-
-    // Components //
-
-    NotificationManager.Settings {
-        id: notificationSettings
+        settings.save()
     }
 }
