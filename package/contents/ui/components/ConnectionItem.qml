@@ -6,6 +6,8 @@ import org.kde.plasma.networkmanagement as PlasmaNM
 Lib.LongButton {
     title: Name
     source: ConnectionIcon
+    sourceColor: "#f5fcff"
+    margin: root.smallSpacing
 
     Network {
         id: network

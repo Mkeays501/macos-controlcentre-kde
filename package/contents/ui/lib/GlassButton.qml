@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-// Liquid Glass layout modifications, 2026. Based on Prayag Jain and Mkeays501.
+// Enhanced Liquid Glass Button — Multi-layer with specular highlights
 import QtQuick
 import "Icons.js" as Icons
 import QtQuick.Controls
@@ -17,25 +17,98 @@ AbstractButton {
     Accessible.description: subtitle
     ToolTip.visible: hovered
     ToolTip.text: text + (subtitle.length ? " — " + subtitle : "")
-    background: Card {
+
+    background: Item {
         id: surface
-        radius: control.circular ? width / 2 : height / 2
-        opacity: control.down ? 0.7 : 1
+        readonly property real r: control.circular ? width / 2 : height / 2
+        readonly property real scale: root.scale
+
+        // Base glass shape
         Rectangle {
             anchors.fill: parent
-            radius: surface.radius
-            color: control.active ? control.activeColor : "#ffffff"
-            opacity: control.active ? 0.95 : (control.hovered ? 0.12 : 0)
+            radius: surface.r
+            color: root.enableTransparency ? "#3a2a4a99" : "#1e2d3d"
+            border.width: 1.5 * surface.scale
+            border.color: control.active ? control.activeColor : (root.enableTransparency ? "#5aaacccc" : "#3a5a7a")
+
+            // Gradient depth
+            gradient: Gradient {
+                GradientStop { position: 0; color: root.enableTransparency ? "#5a4a7ac" : "#3a5a6a" }
+                GradientStop { position: 0.4; color: root.enableTransparency ? "#4a3a6a99" : "#2a4a5a" }
+                GradientStop { position: 0.7; color: root.enableTransparency ? "#3a2a5a88" : "#223a4a" }
+                GradientStop { position: 1; color: root.enableTransparency ? "#2a1a4a77" : "#1a2a3a" }
+            }
         }
+
+        // Top specular highlight (main glass reflection)
+        Rectangle {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            height: Math.max(1, 0.22 * parent.height)
+            radius: surface.r
+            clip: true
+            gradient: Gradient {
+                GradientStop { position: 0; color: root.enableTransparency ? "#ffffff44" : "#ffffff22" }
+                GradientStop { position: 0.4; color: root.enableTransparency ? "#ffffff1a" : "#ffffff0c" }
+                GradientStop { position: 1; color: "transparent" }
+            }
+        }
+
+        // Left edge specular
+        Rectangle {
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: Math.max(1, 0.1 * parent.width)
+            radius: surface.r
+            clip: true
+            gradient: Gradient {
+                GradientStop { position: 0; color: root.enableTransparency ? "#ffffff2a" : "#ffffff12" }
+                GradientStop { position: 1; color: "transparent" }
+            }
+        }
+
+        // Inner border highlight
         Rectangle {
             anchors.fill: parent
-            anchors.margins: 3
-            radius: Math.max(0, surface.radius - 3)
+            anchors.margins: 2 * surface.scale
+            radius: Math.max(0, surface.r - 2 * surface.scale)
             color: "transparent"
-            border.color: control.visualFocus ? "white" : "transparent"
-            border.width: 2
+            border.width: 1 * surface.scale
+            border.color: root.enableTransparency ? "#ffffff33" : "#ffffff15"
+        }
+
+        // Active state overlay (colored glass)
+        Rectangle {
+            anchors.fill: parent
+            radius: surface.r
+            color: control.active ? control.activeColor : "transparent"
+            opacity: control.active ? 0.35 : 0
+            Behavior on opacity { ColorAnimation { duration: 150 } }
+        }
+
+        // Hover/press overlay
+        Rectangle {
+            anchors.fill: parent
+            radius: surface.r
+            color: control.down ? "#ffffff24" : (control.hovered ? "#ffffff10" : "transparent")
+            Behavior on color { ColorAnimation { duration: 80 } }
+        }
+
+        // Focus ring
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: -2 * surface.scale
+            radius: surface.r + 2 * surface.scale
+            color: "transparent"
+            border.width: 2 * surface.scale
+            border.color: control.visualFocus ? "#2489ff" : "transparent"
+            opacity: control.visualFocus ? 0.8 : 0
+            Behavior on opacity { ColorAnimation { duration: 100 } }
         }
     }
+
     contentItem: Item {
         Glyph {
             id: glyph
@@ -53,6 +126,7 @@ AbstractButton {
             anchors.right: parent.right
             anchors.rightMargin: 10 * root.scale
             anchors.verticalCenter: parent.verticalCenter
+            spacing: 1 * root.scale
             Text {
                 width: parent.width
                 text: control.text
@@ -62,12 +136,21 @@ AbstractButton {
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 clip: true
+                // Subtle text shadow for depth
+                layer.enabled: true
+                layer.effect: DropShadow {
+                    horizontalOffset: 0
+                    verticalOffset: 1 * root.scale
+                    radius: 2 * root.scale
+                    samples: 8
+                    color: "#00000080"
+                }
             }
             Text {
                 width: parent.width
                 visible: text.length > 0
                 text: control.subtitle.replace(/\n/g, " · ")
-                color: "#d3ebf6"
+                color: "#b8dfe8"
                 font.pixelSize: 12 * root.scale
                 elide: Text.ElideRight
                 maximumLineCount: 1

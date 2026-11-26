@@ -12,6 +12,12 @@
         <entry name="transparency" type="Bool">
             <default>True</default>
         </entry>
+        <entry name="glassIntensity" type="Int">
+            <default>70</default>
+        </entry>
+        <entry name="blurBackground" type="Bool">
+            <default>False</default>
+        </entry>
         <entry name="isDarkTheme" type="int">
             <default>-1</default>
         </entry>
