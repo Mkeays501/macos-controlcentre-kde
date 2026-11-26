@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-// Liquid Glass layout modifications, 2026. Based on Prayag Jain and Mkeays501.
+// Enhanced Liquid Glass Focus Button — Wide pill with state indication
 import QtQuick
 import org.kde.notificationmanager as Notifications
 import "../lib" as Lib
@@ -8,6 +8,8 @@ Lib.GlassButton {
     text: i18n("Focus")
     subtitle: inhibited ? i18n("Do Not Disturb on") : i18n("Do Not Disturb off")
     source: "notifications-disabled"
+    active: inhibited
+    activeColor: "#ff6b4a" // Warm accent for DND on
     readonly property bool inhibited: settings.notificationsInhibitedUntil.getTime() > Date.now()
         || settings.notificationsInhibitedByApplication
         || (settings.inhibitNotificationsWhenScreensMirrored && settings.screensMirrored)

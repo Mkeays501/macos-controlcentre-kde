@@ -21,7 +21,9 @@ Lib.CardButton {
 
     Lib.Glyph {
         anchors.fill: parent
+        anchors.margins: 8 * root.scale
         source: icon
+        color: "#f5fcff"
     }
 
     PlasmaCore.DataSource {

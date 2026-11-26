@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-// Liquid Glass layout modifications, 2026. Based on Prayag Jain and Mkeays501.
+// Enhanced Liquid Glass Section Buttons — Network, Bluetooth, Focus pills
 import QtQuick
 import QtQuick.Layouts
 import org.kde.bluezqt as BluezQt
@@ -10,6 +10,8 @@ ColumnLayout {
     property QtObject btManager: BluezQt.Manager
     Network { id: network }
     spacing: 14 * root.scale
+
+    // Network / Wi-Fi Pill (wide)
     Lib.GlassButton {
         Layout.fillWidth: true
         Layout.preferredHeight: 80 * root.scale
@@ -18,8 +20,11 @@ ColumnLayout {
         source: network.activeConnectionIcon
         onClicked: sectionNetworks.toggleNetworkSection()
     }
+
+    // Bluetooth + Pair row
     RowLayout {
         spacing: 14 * root.scale
+        // Bluetooth toggle (circular)
         Lib.GlassButton {
             Layout.fillWidth: true
             Layout.preferredHeight: 80 * root.scale
@@ -28,9 +33,11 @@ ColumnLayout {
             subtitle: Funcs.getBtDevice()
             source: "network-bluetooth"
             active: btManager.bluetoothOperational
+            activeColor: "#2489ff"
             enabled: btManager.adapters.length > 0
             onClicked: Funcs.toggleBluetooth()
         }
+        // Bluetooth settings (circular)
         Lib.GlassButton {
             Layout.fillWidth: true
             Layout.preferredHeight: 80 * root.scale

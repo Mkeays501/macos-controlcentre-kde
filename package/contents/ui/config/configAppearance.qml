@@ -11,9 +11,12 @@ import org.kde.kcmutils as KCM
 KCM.SimpleKCM {
     property alias cfg_scale: scale.value
     property alias cfg_transparency: transparency.checked
+    property alias cfg_glassIntensity: glassIntensity.value
+    property alias cfg_blurBackground: blurBackground.checked
     property alias cfg_showKDEConnect: showKDEConnect.checked
     property alias cfg_showNightColor: showNightColor.checked
     property alias cfg_showColorSwitcher: showColorSwitcher.checked
+    property alias cfg_showDnd: showDnd.checked
     property alias cfg_showVolume: showVolume.checked
     property alias cfg_showBrightness: showBrightness.checked
     property alias cfg_showMediaPlayer: showMediaPlayer.checked
@@ -34,7 +37,7 @@ KCM.SimpleKCM {
     Kirigami.FormLayout {
         Button {
             id: mainIconName
-            Kirigami.FormData.label: i18n("Icon:")
+            Kirigami.FormData.label: i18n("Panel Icon:")
             icon.width: Kirigami.Units.iconSizes.medium
             icon.height: icon.width
 
@@ -45,8 +48,9 @@ KCM.SimpleKCM {
 
         SpinBox {
             id: scale
-            Kirigami.FormData.label: i18n("Scale:")
+            Kirigami.FormData.label: i18n("Scale (%):")
             from: 50; to: 200
+            stepSize: 10
         }
 
         Item {
@@ -54,13 +58,25 @@ KCM.SimpleKCM {
         }
 
         CheckBox {
-            id: showPercentage
-            Kirigami.FormData.label: i18n("General:")
-            text: i18n("Show volume/brightness percentage")
+            id: transparency
+            Kirigami.FormData.label: i18n("Glass Effect:")
+            text: i18n("Enable transparency (glass background)")
+        }
+        SpinBox {
+            id: glassIntensity
+            Kirigami.FormData.label: i18n("Glass Intensity:")
+            from: 10; to: 100
+            stepSize: 10
+            enabled: transparency.checked
         }
         CheckBox {
-            id: transparency
-            text: i18n("Enable transparency")
+            id: blurBackground
+            text: i18n("Enable background blur (requires KWin blur effect)")
+            enabled: transparency.checked
+        }
+        CheckBox {
+            id: showPercentage
+            text: i18n("Show volume/brightness percentage")
         }
 
         Item {
@@ -69,7 +85,7 @@ KCM.SimpleKCM {
 
         CheckBox {
             id: showKDEConnect
-            Kirigami.FormData.label: i18n("Show quick toggle buttons:")
+            Kirigami.FormData.label: i18n("Quick toggle buttons:")
             text: i18n('KDE Connect')
             enabled: !checked && numChecked < maxNum || checked
         }
@@ -81,6 +97,11 @@ KCM.SimpleKCM {
         CheckBox {
             id: showColorSwitcher
             text: i18n('Color Scheme Switcher')
+            enabled: !checked && numChecked < maxNum || checked
+        }
+        CheckBox {
+            id: showDnd
+            text: i18n('Focus / Do Not Disturb')
             enabled: !checked && numChecked < maxNum || checked
         }
         CheckBox {

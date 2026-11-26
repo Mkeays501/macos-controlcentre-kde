@@ -21,6 +21,7 @@ Lib.CardButton {
     Lib.Glyph {
         anchors.fill: parent
         source: "brightness-high"
+        color: "#f5fcff"
     }
 
     onClicked: executable.swapColorScheme()

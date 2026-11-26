@@ -11,6 +11,8 @@ PlasmoidItem {
 
     // PROPERTIES
     property bool enableTransparency: Plasmoid.configuration.transparency
+    property int glassIntensity: Plasmoid.configuration.glassIntensity
+    property bool enableBlur: Plasmoid.configuration.blurBackground
     property var animationDuration: Kirigami.Units.veryShortDuration
     property bool playVolumeFeedback: Plasmoid.configuration.playVolumeFeedback
 

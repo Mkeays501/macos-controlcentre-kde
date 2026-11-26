@@ -1,2 +1,4 @@
-<!-- SPDX-License-Identifier: GPL-3.0-only; Original geometric icons, 2026. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7 10 10-6 5V2l6 5L8 17"/></svg>
+<!-- SPDX-License-Identifier: GPL-3.0-only; Enhanced geometric icons, 2026. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 3L7 8l5 5-5 5 5 5v-5l-5-5 5-5z"/>
+</svg>
